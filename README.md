@@ -11,7 +11,7 @@ The main notebook demonstrates the end-to-end flow: load model, (optionally) pru
 ---
 
 ## Quick start (Google Colab, T4 GPU)
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TaharHERRI/sparsify-min/blob/main/notebooks/S1_minimal.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TaharHERRI/Edu-Sparsify-LLMs/blob/main/notebooks/S1_minimal.ipynb)
 
 1. **Set the runtime to T4 GPU**  
    In Colab: **Runtime → Change runtime type → Hardware accelerator: GPU → GPU type: T4**.
