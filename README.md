@@ -1,12 +1,18 @@
-# sparsify-min
+## Introduction
 
-Minimal, didactic repo that shows three execution modes for small causal LMs:
+This repository provides a minimal, didactic framework for studying **unstructured weight pruning** in small Transformer language models under strict hardware constraints. Instead of relying on full text generation or perplexity — which are impractical when models cannot be fully loaded into memory — the project focuses on two complementary axes:
 
-1. **Dense baseline**
-2. **Unstructured (masked) pruning** — sets weights to zero but still runs dense kernels
-3. **CSR execution** — converts selected linear layers to a sparse format to use sparse kernels when available (e.g., MKL on CPU / cuSPARSE on GPU)
+- **Behavioural analysis:** token-level *top-1 agreement* between the dense model and its pruned variants, quantifying how pruning alters predictions.
+- **Structural analysis:** per-layer sparsity, parameter distribution, and theoretical FLOPs reduction, including a comparison between dense, masked, and CSR-executed layers.
 
-The main notebook demonstrates the end-to-end flow: load model, (optionally) prune, convert to CSR, and run inference/evaluation.
+Three model variants are explored:
+- **Dense baseline**  
+- **Masked pruning (30%)** — unstructured magnitude pruning, weights set to zero but tensors remain dense  
+- **CSR pruning (30%)** — same pruning, with selected linear layers converted to **Compressed Sparse Row (CSR)** format to reduce memory footprint and arithmetic cost
+
+The repository notebooks illustrate the full workflow:  
+**load model → prune → convert to CSR → evaluate top-1 stability → inspect structural effects.**  
+This makes the project a compact, reproducible environment for understanding how sparsification affects both the behaviour and internal structure of Transformer LMs.
 
 ---
 
@@ -57,21 +63,26 @@ A CUDA-capable GPU is helpful but not required to run the demo.
 ## Repository layout
 
 ```
-notebooks/
-  S1_minimal.ipynb      # Main demo: dense → masked → CSR
-src/
-  eval/                 # utilities (metrics, latency helpers, plotting hooks)
-  pruning/              # pruning policies + pipeline (freeze/convert)
-  wrappers/             # CSR execution (e.g., LinearCSRForward)
-requirements.txt
-README.md
+Repository layout
+├── notebooks/
+├── src/
+│   ├── eval/                        
+│   ├── pruning/                     
+│   └── wrappers/                    
+├── docs/                            
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
 ## Notes
 
-* **Masked pruning vs. execution:** masking zeros weights in place but continues to use dense ops; it is primarily useful to illustrate sparsity without changing kernels.
-* **CSR path:** selected linear layers are converted to CSR and swapped with a sparse-aware forward; when the backend supports it, sparse kernels may be used (e.g., MKL/cuSPARSE).
-* **Device selection:** the notebook auto-selects CUDA if available; otherwise it runs on CPU.
-* **Reproducibility:** seeds are set in code where relevant; exact outputs may still vary by device/driver/library versions.
+* **Masked pruning vs. execution:** magnitude pruning sets a fraction of weights to zero but the layers remain dense; computation still uses standard dense GEMM. This mode is useful to study behavioural and structural effects of sparsity without introducing changes in the execution kernels.
+
+* **CSR path:** after pruning, selected linear layers are converted to a **Compressed Sparse Row (CSR)** representation and wrapped with a sparse-aware forward operator. This reduces stored parameters and theoretical FLOPs. Actual sparse acceleration depends on backend support (e.g., MKL on CPU, cuSPARSE on GPU); on unsupported environments, the fallback is a Python-level sparse matmul.
+
+* **Device selection:** notebooks automatically choose GPU (CUDA) when available; otherwise, all steps run on CPU. CSR execution is still functional on CPU-only setups, but without GPU-level sparse kernel acceleration.
+
+* **Reproducibility:** random seeds are set consistently, though exact numerical outputs may vary across hardware, driver versions, and linear algebra libraries.
+
