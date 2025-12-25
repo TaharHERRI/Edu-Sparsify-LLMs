@@ -17,7 +17,9 @@ This makes the project a compact, reproducible environment for understanding how
 ---
 
 ## Quick start (Google Colab, T4 GPU)
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TaharHERRI/Edu-Sparsify-LLMs/blob/main/notebooks/S1_minimal.ipynb)
+[![Open in Colab Notebook 1](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TaharHERRI/Edu-Sparsify-LLMs/blob/main/notebooks/Structural_Layer_by_Layer_Analysis.ipynb)
+
+[![Open in Colab Notebook 2](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TaharHERRI/Edu-Sparsify-LLMs/blob/main/notebooks/Global_Behavior_&_Similarity.ipynb)
 
 1. **Set the runtime to T4 GPU**  
    In Colab: **Runtime → Change runtime type → Hardware accelerator: GPU → GPU type: T4**.
